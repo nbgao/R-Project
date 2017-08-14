@@ -137,8 +137,10 @@ getSymbols(c("AAPL", "ORCL", "MSFT", "GOOG"), src = "yahoo", env = new.environme
 # 将4家公司股票的每天调整价格整理在一个数据框中
 m <- cbind(Ad(get("AAPL", env = new.environment)), Ad(get("ORCL", env = new.environment)), Ad(get("MSFT", env = new.environment)), Ad(get("GOOG", env = new.environment)))
 
+# 分析判断相关性并绘图
 library(psych)
 corr.test(as.data.frame(m))
 
 # 绘制相关性图
-library(cor)
+library(corrplot)
+corrplot.mixed(cor(m), lower = "ellipse", upper = "circle")
