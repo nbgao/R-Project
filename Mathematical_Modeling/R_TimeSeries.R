@@ -2,6 +2,10 @@ library(xlsx)
 
 input_file1 <- "东海3类的平均值.csv"
 input_file1_m <- "../图表/第2问/东海_3类_月平均.xlsx"
+input_file2_m <- "../图表/第2问/杭州湾_3类_月平均.xlsx"
+input_file3_m <- "../图表/第2问/南海_3类_月平均.xlsx"
+input_file4_m <- "../图表/第2问/台湾海峡_3类_月平均.xlsx"
+
 Data <- read.csv(input_file1, header=T)
 
 data1 <- Data$C1
@@ -26,7 +30,7 @@ axis(1, at=c((2002-90/365):(2011-90/365)), labels = c(2002:2011))
 axis(2, at=c(18:32), labels = c(18:32))
 
 # Holt-Winters预测
-data1_ts_forecast <- forecast(data1_ts_HW, h=365*3)
+data1_ts_forecast <- foercast(data1_ts_HW, h=365*3)
 plot(data1_ts_forecast, col='blue', xlab="", ylab="海表温度(℃)", xaxt="n")
 axis(1, at=c((2002-90/365):(2014-90/365)), labels = c(2002:2014))
 # 深灰色部分为80%的置信区间，浅灰色为95的置信区间
@@ -37,7 +41,7 @@ Box.test(data1_ts_forecast$residuals, lag=20, type="Ljung-Box")
 
 
 
-Data1 <- read.xlsx(input_file1_1, sheetIndex = 1, header = F)
+Data1 <- read.xlsx(input_file1_m, sheetIndex = 1, header = F)
 Data1_1 <- Data1[1]
 Data1_2 <- Data1[2]
 Data1_3 <- Data1[3]
@@ -55,6 +59,7 @@ axis(2, at=c(18:32), labels = c(18:32))
 
 # Holt-Winters预测
 Data1_1_ts_forecast <- forecast(Data1_1_ts_HW, h=12*3)
+c(Data1_1_ts_forecast$model$alpha, Data1_1_ts_forecast$model$beta, Data1_1_ts_forecast$model$gamma)
 plot(Data1_1_ts_forecast, col='blue', xlab="", ylab="海表温度(℃)", xaxt="n")
 axis(1, at=c(2002:2014), labels = c(2002:2014))
 # 深灰色部分为80%的置信区间，浅灰色为95的置信区间
@@ -62,3 +67,49 @@ axis(1, at=c(2002:2014), labels = c(2002:2014))
 # 预测误差ACF检验和Ljung-Box检验
 acf(Data1_1_ts_forecast$residuals[!is.na(Data1_1_ts_forecast$residuals)], lag.max=20, plot=T)
 Box.test(Data1_1_ts_forecast$residuals, lag=20, type="Ljung-Box")
+
+
+
+Data1_2_ts <- ts(Data1_2, frequency = 12, start = c(2002,4))
+plot.ts(Data1_2_ts, col='blue', xlab="", ylab="海表温度(℃)", xaxt="n", yaxt="n") 
+axis(1, at=c(2002:2011), labels = c(2002:2011))
+axis(2, at=c(12:30), labels = c(12:30))
+
+# Holt-Winters指数平滑曲线
+Data1_2_ts_HW <- HoltWinters(Data1_2_ts)
+plot(Data1_2_ts_HW, col='blue', xlab="", ylab="海表温度(℃)", xaxt="n", yaxt="n", main="HoltWinters指数平滑曲线")
+axis(1, at=c(2002:2011), labels = c(2002:2011))
+axis(2, at=c(12:30), labels = c(12:30))
+
+# Holt-Winters预测
+Data1_2_ts_forecast <- forecast(Data1_2_ts_HW, h=12*3)
+plot(Data1_2_ts_forecast, col='blue', xlab="", ylab="海表温度(℃)", xaxt="n")
+axis(1, at=c(2002:2014), labels = c(2002:2014))
+# 深灰色部分为80%的置信区间，浅灰色为95的置信区间
+
+# 预测误差ACF检验和Ljung-Box检验
+acf(Data1_2_ts_forecast$residuals[!is.na(Data1_2_ts_forecast$residuals)], lag.max=20, plot=T)
+Box.test(Data1_2_ts_forecast$residuals, lag=20, type="Ljung-Box")
+
+
+
+Data1_3_ts <- ts(Data1_3, frequency = 12, start = c(2002,4))
+plot.ts(Data1_3_ts, col='blue', xlab="", ylab="海表温度(℃)", xaxt="n", yaxt="n") 
+axis(1, at=c(2002:2011), labels = c(2002:2011))
+axis(2, at=c(19:30), labels = c(19:30))
+
+# Holt-Winters指数平滑曲线
+Data1_3_ts_HW <- HoltWinters(Data1_3_ts)
+plot(Data1_3_ts_HW, col='blue', xlab="", ylab="海表温度(℃)", xaxt="n", yaxt="n", main="HoltWinters指数平滑曲线")
+axis(1, at=c(2002:2011), labels = c(2002:2011))
+axis(2, at=c(19:30), labels = c(19:30))
+
+# Holt-Winters预测
+Data1_3_ts_forecast <- forecast(Data1_3_ts_HW, h=12*3)
+plot(Data1_3_ts_forecast, col='blue', xlab="", ylab="海表温度(℃)", xaxt="n")
+axis(1, at=c(2002:2014), labels = c(2002:2014))
+# 深灰色部分为80%的置信区间，浅灰色为95的置信区间
+
+# 预测误差ACF检验和Ljung-Box检验
+acf(Data1_3_ts_forecast$residuals[!is.na(Data1_3_ts_forecast$residuals)], lag.max=20, plot=T)
+Box.test(Data1_3_ts_forecast$residuals, lag=20, type="Ljung-Box")
