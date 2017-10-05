@@ -119,3 +119,38 @@ discriminiant.fisher <- function(TrnX1, TrnX2, TstX=NULL){
   }
   blong
 }
+
+
+
+## 5. 判对率
+library(MASS)
+train <- bankruptcy[1:38,]
+head(train)
+
+# 5.1 线性判对率
+distance.lda = lda(类别~., data=train)
+table <- table(train$类别, predict(distance.lda, train)$class)
+table
+sum(diag(prop.table(table)))
+
+# 5.2 Bayes判对率
+bayes.lda = lda(类别~., data=train, prior=c(21,17,8)/46)
+table <- table(train$类别, predict(bayes.lda, train)$class)
+table
+sum(diag(prop.table(table)))
+
+## 6. 用LDA预测股票涨跌
+install.packages("ISLR")
+library(ISLR)
+library(MASS)
+attach(Smarket)
+
+lda.fit = lda(Direction~Lag1+Lag2, data=Smarket, subset=Year<2005)
+lda.fit
+
+Smarket.2005 = subset(Smarket, Year==2005)
+lda.pred = predict(lda.fit, Smarket.2005)$class
+data.frame(lda.pred)[1:5,]
+table <- table(lda.pred, Smarket.2005$Direction)
+# 计算判对率
+sum(diag(prop.table(table)))

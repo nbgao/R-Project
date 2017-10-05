@@ -13,3 +13,8 @@ discriminiant.distance(trainX1, trainX2, testX)
 discriminiant.bayes(trainX1, trainX2, rate=21/17)
 discriminiant.bayes(trainX1, trainX2, rate=21/17, var.equal=T)
 discriminiant.bayes(trainX1, trainX2, rate=21/17, testX, var.equal = T)
+
+
+# source('discriminiant.fisher.R')
+discriminiant.fisher(trainX1, trainX2)
+discriminiant.fisher(trainX1, trainX2, testX)
